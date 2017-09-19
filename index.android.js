@@ -1,110 +1,108 @@
 import React, { Component } from 'react';
-import { AppRegistry, Text } from 'react-native';
+import List from './List';
+
 import {
-  Container,
-  Header,
-  Content,
-  Form,
-  Left,
-  Body,
-  Right,
-  Item,
-  Input,
-  Submit,
-  Label,
-  Button,
-  Icon,
-  Title,
-  List,
-  ListItem,
-} from 'native-base';
+  StyleSheet,
+  Text,
+  View,
+  StatusBar,
+  Dimensions,
+  TextInput,
+  AppRegistry
+} from 'react-native';
 
-
-var loop = [];
+import { Container, Header, Content, Form, Item, Input, Label, Button, Body} from 'native-base';
 
 export default class card extends Component {
-
-  constructor(){
-    super()
+  constructor(props) {
+    super(props);
     this.state = {
-      name:'',
+      term: '',
+      items: []
+    };
     }
-  }
 
-  renderHeader() {
+    onChange = (text) => {
+    this.setState({term: text});
+    }
 
-    return (
-        <Header>
+    onSubmit = (event) => {
+      event.preventDefault()
 
+      if (this.state.term == '') {
+        return;
+      };
 
-              {/* <Icon name='ios-menu'/>   */}
+      const array = [...this.state.items]
+      array.push(this.state.term)
 
-
-          <Body>
-            <Title>Hello</Title>
-          </Body>
-
-
-            {/* <Icon name='navigate' /> */}
-
-
-        </Header>
-    );
-  }
-
-  renderContent() {
-
-    return (
-        <Content>
-
-          <Form>
-
-            <Item floatingLabel>
-
-              <Label>Type text in here</Label>
-              <Input onChangeText = {(text) => {this.setState({name:text})}} />
-            </Item>
-
-            <Button full primary action="submit">
-            <Text>Add</Text>
-          </Button>
-
-          </Form>
-
-          <List>
-
-            <ListItem itemDivider>
-              <Text>Task :  {loop} </Text>
-            </ListItem>
-
-          </List>
-
-        </Content>
-    );
-  }
+      this.setState({
+        term: '',
+        items: array
+      });
+    }
 
   render() {
-
-
-    for(let i = 0; i < 1; i++){
-        loop.push(
-          <Text>{this.state.name} {'\n'}</Text>
-        );
-    }
-
     return (
       <Container>
 
-        {/* HEADER */}
-        {this.renderHeader()}
+      <Header style={{backgroundColor: '#39547f'}}>
 
-        {/* CONTENT */}
-        {this.renderContent()}
+      <Body>
+      <Text style={{color: '#FFF', fontSize:20}}>Header</Text>
+      </Body>
+
+      <Button rounded onPress={this.onSubmit} style={{backgroundColor:'#d7dae0'}}>
+        <Text style={{fontSize:25}}>+</Text>
+      </Button>
+
+      </Header>
+
+        <StatusBar hidden = {true}/>
+      <Content>
+          <Form>
+            <Item floatingLabel>
+              <Label>Input Text in Here</Label>
+              <Input
+                value={this.state.term}
+                onChangeText={this.onChange}
+                onSubmitEditing={this.onSubmit}
+                style={localStyles.entree}
+              />
+            </Item>
+          </Form>
+
+          <View>
+            <List items={this.state.items} />
+          </View>
+
+          <View style={localStyles.buttonContainer}>
+
+          </View>
+
+        </Content>
 
       </Container>
-    );
+    )
+
   }
 }
 
+const localStyles = StyleSheet.create({
+
+  entree: {
+    padding: 15,
+    width: 350,
+    height: 50,
+    },
+
+  buttonContainer: {
+    width: 200,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center'
+    },
+
+});
 
 AppRegistry.registerComponent('card', () => card);
